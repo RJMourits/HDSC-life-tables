@@ -21,7 +21,7 @@
   ################################################
   
   #open dataset
-  SR <- fread("Data HDSC/Dataset Suriname Slave and Emancipation Registers Version 1.0.csv", encoding="UTF-8")
+  SR <- fread("Data HDSC/Dataset Suriname Slave and Emancipation Registers Version 1.1.csv", encoding="UTF-8")
   
   #select series 4 with known sex
   SR <- SR[SR$Serieregister=="1851-1863",] #66,896
@@ -186,7 +186,7 @@
   lifetable_5_male[,9] <- round(lifetable_5_male[,9], 1)
   
   
-  write.xlsx(lifetable_5_male, "Life tables/mannen suriname.xlsx", overwrite=T)
+  write.xlsx(lifetable_5_male, "Life tables/Life tables Surinamese slave registers, men.xlsx", overwrite=T)
   
   
   
@@ -251,7 +251,7 @@
   lifetable_5_female[,9] <- round(lifetable_5_female[,9], 1)
   
   
-  write.xlsx(lifetable_5_female, "Life tables/vrouwen suriname.xlsx", overwrite=T)
+  write.xlsx(lifetable_5_female, "Life tables/Life tables Surinamese slave registers, women.xlsx", overwrite=T)
   
   
   
@@ -279,10 +279,33 @@
     scale_color_manual(values=c("#8624f5", "#1fc3aa")) +
     scale_y_continuous(expand = c(0, 0),
                        breaks=seq(0,0.3,by=0.025), 
-                       limit=c(0,0.305)) +
+                       limit=c(0,0.315)) +
     labs(x="Age bracket",
          y="Mortality rate")
-  ggsave("Life tables/Mortality rates Suriname.jpg", plot = last_plot(), unit="in", dpi=900, width=8, height=6)
+  ggsave("Life tables/Mortality rates Surinamese slave registers.jpg", plot = last_plot(), unit="in", dpi=900, width=8, height=6)
   
+  
+  ggplot(data=df[1:26,], aes(x=age, y=qx, colour=sex, group=sex, shape=sex)) +
+    geom_point() +
+    geom_line(lwd=1, alpha=.3) +
+    geom_point(aes(shape=sex), size=1) +
+    geom_vline(xintercept = 0) +
+    geom_hline(yintercept = 0) +
+    geom_hline(yintercept = seq(0,0.075,0.025), linetype=3, linewidth=.1) +
+    theme(panel.background = element_blank(),
+          axis.text.y = element_text(colour="grey20",size=9,angle=0,hjust=.5,vjust=0,face="plain"),
+          axis.text.x = element_text(colour="grey20",size=9,angle=0,hjust=.5,vjust=0,face="plain"),
+          axis.title = element_text(size=14),
+          strip.background = element_blank(),
+          strip.text.x = element_text(size = 16, face="bold"),
+          legend.position="bottom", legend.title = element_blank(),
+          legend.key=element_blank()) +
+    scale_color_manual(values=c("#8624f5", "#1fc3aa")) +
+    scale_y_continuous(expand = c(0, 0),
+                       breaks=seq(0,0.075,by=0.025), 
+                       limit=c(0,0.08)) +
+    labs(x="Age bracket",
+         y="Mortality rate")
+  ggsave("Life tables/Mortality rates Surinamese slave registers 0-59.jpg", plot = last_plot(), unit="in", dpi=900, width=8, height=6)
   
   
