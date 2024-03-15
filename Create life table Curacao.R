@@ -21,11 +21,17 @@
   ################################################
   
   #open dataset
-  SR <- fread("Data HDSC/Dataset Suriname Slave and Emancipation Registers Version 1.1.csv", encoding="UTF-8")
+  SR <- fread("Data HDSC/Slaveregister_Curacao_V1_0.csv", encoding="UTF-8")
   
-  #select series 4 with known sex
-  SR <- SR[SR$Serieregister=="1851-1863",] #66,896
-  SR <- SR[SR$Sex=="male" | SR$Sex=="female", ] #66,748
+  #recode variables
+  SR$Sex <- ifelse(SR$Sex=="v", "female", SR$Sex)
+  SR$Sex <- ifelse(SR$Sex=="m", "male", SR$Sex)
+  SR$StartEntryYear <- SR$StartEntryYear_cor
+  SR$EndEntryYear <- SR$EndEntryYear_cor
+  
+  #select 1851-1863 with known sex
+  SR <- SR[SR$EndEntryYear>=1851 & SR$StartEntryYear>0, ] #13,837
+  SR <- SR[SR$Sex=="male" | SR$Sex=="female", ] #13,834
   
   #explore date of entry & exit
   barplot(table(SR$StartEntryYear))
@@ -33,11 +39,11 @@
   barplot(table(SR[SR$EndEntryEvent=="Death", "EndEntryYear"]))
   
   #set 1851 as starting date
-  SR <- SR[SR$EndEntryYear>=1851, ] #66,290
+  SR <- SR[SR$EndEntryYear>=1851, ] #13,834
   SR$StartEntryYear <- ifelse(SR$StartEntryYear<1851, 1851, SR$StartEntryYear)
   
   #drop impossible ages
-  SR <- SR[SR$EndEntryYear-SR$Year_birth<100 & SR$EndEntryYear-SR$Year_birth>=0, ] #65,285
+  SR <- SR[SR$EndEntryYear-SR$Year_birth<100 & SR$EndEntryYear-SR$Year_birth>=0, ] #13,784
   
   
   ######################################
@@ -186,7 +192,7 @@
   lifetable_5_male[,9] <- round(lifetable_5_male[,9], 1)
   
   
-  write.xlsx(lifetable_5_male, "Life tables/Life tables Surinamese slave registers, men.xlsx", overwrite=T)
+  write.xlsx(lifetable_5_male, "Life tables/Life tables Curaçao slave registers, men.xlsx", overwrite=T)
   
   
   
@@ -251,7 +257,7 @@
   lifetable_5_female[,9] <- round(lifetable_5_female[,9], 1)
   
   
-  write.xlsx(lifetable_5_female, "Life tables/Life tables Surinamese slave registers, women.xlsx", overwrite=T)
+  write.xlsx(lifetable_5_female, "Life tables/Life tables Curaçao slave registers, women.xlsx", overwrite=T)
   
   
   
@@ -282,7 +288,7 @@
                        limit=c(0,0.315)) +
     labs(x="Age bracket",
          y="Yearly mortality rate")
-  ggsave("Life tables/Mortality rates Surinamese slave registers.jpg", plot = last_plot(), unit="in", dpi=900, width=8, height=6)
+  ggsave("Life tables/Mortality rates Curaçao slave registers.jpg", plot = last_plot(), unit="in", dpi=900, width=8, height=6)
   
   
   ggplot(data=df[1:26,], aes(x=age, y=qx, colour=sex, group=sex, shape=sex)) +
@@ -306,6 +312,6 @@
                        limit=c(0,0.08)) +
     labs(x="Age bracket",
          y="Yearly mortality rate")
-  ggsave("Life tables/Mortality rates Surinamese slave registers 0-59.jpg", plot = last_plot(), unit="in", dpi=900, width=8, height=6)
+  ggsave("Life tables/Mortality rates Curaçao slave registers 0-59.jpg", plot = last_plot(), unit="in", dpi=900, width=8, height=6)
   
   
