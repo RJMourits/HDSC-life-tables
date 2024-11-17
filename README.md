@@ -1,5 +1,5 @@
 # HDSC-life-tables
-These files are used to create yearly overviews of the enslaved population by age from the slave registers for Suriname and Curaçao. 
+These files create yearly overviews of the number of enslaved individuals in the slave registers per December 31 by age from the slave registers for Suriname and Curaçao. 
 
 For each year the mutations by age are also listed, so that the qualitity of the data can be checked. These events are:
 - birth / registration
